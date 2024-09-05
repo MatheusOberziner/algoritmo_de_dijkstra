@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grafo com Dijkstra</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #graph {
+      width: 800px;
+      height: 750px;
+      border: 1px solid #ccc;
+    }
+    #controls {
+      margin-top: 20px;
+    }
+    select, button {
+      margin-right: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body style="display: flex; justify-content: center; margin: 0;">
+
+  <div>
+    <h1>Aplicação do Algoritmo de Dijkstra:</h1>
+    <p style="margin: 0;">Grafo de cidades do Alto Vale (distancias fictícios)</p>
+
+    <div id="graph"></div>
+
+    <div id="controls">
+      <label for="start">Origem:</label>
+      <select id="start">
+        <option disabled selected>--Escolher--</option>
+        <option value="Ibirama">Ibirama</option>
+        <option value="Ituporanga">Ituporanga</option>
+        <option value="Pouso Redondo">Pouso Redondo</option>
+        <option value="Rio do Sul">Rio do Sul</option>
+        <option value="Laurentino">Laurentino</option>
+        <option value="Taió">Taió</option>
+        <option value="Salete">Salete</option>
+        <option value="Trombudo Central">Trombudo Central</option>
+        <option value="Aurora">Aurora</option>
+        <option value="Agrolândia">Agrolândia</option>
+        <option value="Presidente Getúlio">Presidente Getúlio</option>
+        <option value="Dona Emma">Dona Emma</option>
+        <option value="Braço do Trombudo">Braço do Trombudo</option>
+        <option value="Witmarsum">Witmarsum</option>
+        <option value="José Boiteux">José Boiteux</option>
+      </select>
+
+      <label for="end">Destino:</label>
+      <select id="end">
+        <option disabled selected>--Escolher--</option>
+        <option value="Ibirama">Ibirama</option>
+        <option value="Ituporanga">Ituporanga</option>
+        <option value="Pouso Redondo">Pouso Redondo</option>
+        <option value="Rio do Sul">Rio do Sul</option>
+        <option value="Laurentino">Laurentino</option>
+        <option value="Taió">Taió</option>
+        <option value="Salete">Salete</option>
+        <option value="Trombudo Central">Trombudo Central</option>
+        <option value="Aurora">Aurora</option>
+        <option value="Agrolândia">Agrolândia</option>
+        <option value="Presidente Getúlio">Presidente Getúlio</option>
+        <option value="Dona Emma">Dona Emma</option>
+        <option value="Braço do Trombudo">Braço do Trombudo</option>
+        <option value="Witmarsum">Witmarsum</option>
+        <option value="José Boiteux">José Boiteux</option>
+      </select>
+
+      <button id="findPath">Encontrar Caminho Mais Curto</button>
+      <button id="reset">Resetar Caminho</button>
+
+      <p id="result"></p>
+    </div>
+  </div>
+
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
