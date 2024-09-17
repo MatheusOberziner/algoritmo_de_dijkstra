@@ -65,6 +65,7 @@ function dijkstra(graph, start, end) {
 document.getElementById('findPath').addEventListener('click', () => {
   let start = document.getElementById('start').value;
   let end = document.getElementById('end').value;
+
   let result = dijkstra(graph, start, end);
 
   // Exibir o resultado no HTML
@@ -80,14 +81,95 @@ document.getElementById('findPath').addEventListener('click', () => {
   // Destacar as arestas no caminho mais curto
   svg.selectAll('line')
     .filter(d => pathNodes.includes(d.source) && pathNodes.includes(d.target) && (pathNodes.indexOf(d.source) === pathNodes.indexOf(d.target) - 1 || pathNodes.indexOf(d.target) === pathNodes.indexOf(d.source) - 1))
-    .attr('stroke', 'red')
-    .attr('stroke-width', 4);
+    .attr('stroke', 'blue')
+    .attr('stroke-width', 3);
 
   // Destacar os nós no caminho mais curto
   svg.selectAll('circle')
     .filter(d => pathNodes.includes(d.id))
     .attr('fill', 'orange');
 });
+
+// Variáveis de estado para o passo a passo
+let stepPath = [];
+let currentStep = 0;
+let stepInProgress = false;
+let stringCaminho = '';
+
+// Função para executar o passo a passo
+function stepByStepDijkstra() {
+  if (!stepInProgress) {
+    // Obter os valores de origem e destino
+    let start = document.getElementById('start').value;
+    let end = document.getElementById('end').value;
+
+    // Executar o Dijkstra e armazenar o caminho completo
+    let result = dijkstra(graph, start, end);
+    stepPath = result.path;
+    currentStep = 0;
+    stepInProgress = true;
+    stringCaminho = `Caminho mais curto: ${result.path.join(' -> ')} (Distância total: ${result.distance})`;
+
+    // Resetar o grafo antes de começar o passo a passo
+    svg.selectAll('line').attr('stroke', 'black').attr('stroke-width', 1);
+    svg.selectAll('circle').attr('fill', 'lightblue');
+
+    // Destacar o ponto de partida
+    highlightNode(stepPath[currentStep]);
+    document.getElementById('result').textContent = `Iniciando no vértice: ${stepPath[currentStep]}`
+    currentStep++;
+  } else {
+    // Continuar destacando o próximo passo no caminho
+    if (currentStep < stepPath.length) {
+      highlightEdge(stepPath[currentStep - 1], stepPath[currentStep]);
+      highlightNode(stepPath[currentStep]);
+      document.getElementById('result').textContent = `Destacando aresta: ${stepPath[currentStep - 1]} -> ${stepPath[currentStep]}`;
+      currentStep++;
+    } else {
+      stepInProgress = false; // Finaliza o passo a passo
+      document.getElementById('result').textContent = 'Caminho completo!';
+      document.getElementById('result').textContent = stringCaminho;
+    }
+  }
+}
+
+// Função para destacar um nó (vértice)
+function highlightNode(node) {
+  svg.selectAll('circle')
+    .filter(d => d.id === node)
+    .attr('fill', 'orange');
+}
+
+// Função para destacar uma aresta (link entre dois nós)
+function highlightEdge(node1, node2) {
+  svg.selectAll('line')
+    .filter(d => (d.source === node1 && d.target === node2) || (d.source === node2 && d.target === node1))
+    .attr('stroke', 'blue')
+    .attr('stroke-width', 3);
+}
+
+// Evento do botão para executar passo a passo
+document.getElementById('stepByStep').addEventListener('click', stepByStepDijkstra);
+
+// Modificar o reset para também resetar o estado do passo a passo
+document.getElementById('reset').addEventListener('click', () => {
+  document.getElementById('start').selectedIndex = 0;
+  document.getElementById('end').selectedIndex = 0;
+  document.getElementById('result').textContent = '';
+
+  svg.selectAll('line')
+    .attr('stroke', 'black')
+    .attr('stroke-width', 1);
+
+  svg.selectAll('circle')
+    .attr('fill', 'lightblue');
+
+  // Resetar o estado do passo a passo
+  stepInProgress = false;
+  stepPath = [];
+  currentStep = 0;
+});
+
 
 // Função para resetar os selects e o caminho no grafo
 document.getElementById('reset').addEventListener('click', () => {
@@ -191,6 +273,8 @@ svg.selectAll('circle')
   .attr('cy', d => d.y)
   .attr('r', 30)
   .attr('fill', 'lightblue')
+  .attr('stroke', 'black')
+  .attr('stroke-width', 1)
 
 // Adicionar labels aos vértices
 svg.selectAll('text.source')
@@ -200,6 +284,7 @@ svg.selectAll('text.source')
   .attr('x', d => d.x)
   .attr('y', d => d.y)
   .attr('text-anchor', 'middle')
+  .attr('dy', 5)
   .text(d => d.id)
   .attr('font-size', '12px')
-  // .attr('font-weight', 'bold')
+  .attr('font-weight', 'bold')
