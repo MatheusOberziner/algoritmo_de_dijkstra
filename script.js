@@ -101,7 +101,7 @@ function stepByStepDijkstra() {
   if (!stepInProgress) {
     // Obter os valores de origem e destino
     let start = document.getElementById('start').value;
-    let end = document.getElementById('end').value;
+    let end = document.getElementById('end').value
 
     // Executar o Dijkstra e armazenar o caminho completo
     let result = dijkstra(graph, start, end);
