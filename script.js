@@ -71,6 +71,27 @@ document.getElementById('findPath').addEventListener('click', () => {
   // Exibir o resultado no HTML
   document.getElementById('result').textContent = `Caminho mais curto: ${result.path.join(' -> ')} (Distância total: ${result.distance})`;
 
+  let totalCost = 0
+  // Calcular o custo total do caminho
+  for (let i = 0; i < result.path.length - 1; i++) {
+    const currentCity = result.path[i]
+    const nextCity = result.path[i + 1]
+
+    const roadSegment = links.find(link =>
+      (link.source === currentCity && link.target === nextCity) ||
+      (link.source === nextCity && link.target === currentCity)
+    )
+
+    // Fórmula do custo: f(x) = distância * pavimentação * tráfego
+    if (roadSegment) {
+      const cost = roadSegment.distance * roadSegment.pavimentacao * roadSegment.trafego
+      totalCost += cost
+    }
+  }
+
+  // Exibir o custo total no HTML
+  document.getElementById('cost').textContent = `Custo total do caminho selecionado: ${totalCost}`
+
   // Redefinir a aparência das arestas e vértices
   svg.selectAll('line').attr('stroke', 'black').attr('stroke-width', 1);
   svg.selectAll('circle').attr('fill', 'lightblue');
@@ -156,6 +177,7 @@ document.getElementById('reset').addEventListener('click', () => {
   document.getElementById('start').selectedIndex = 0;
   document.getElementById('end').selectedIndex = 0;
   document.getElementById('result').textContent = '';
+  document.getElementById('cost').textContent = '';
 
   svg.selectAll('line')
     .attr('stroke', 'black')
@@ -214,27 +236,27 @@ const nodes = [
 
 // Conexões entre vértices (arestas)
 const links = [
-  { source: 'Rio do Sul', target: 'Ituporanga', distance: 35 },
-  { source: 'Rio do Sul', target: 'Ibirama', distance: 45 },
-  { source: 'Rio do Sul', target: 'Taió', distance: 55 },
-  { source: 'Rio do Sul', target: 'Trombudo Central', distance: 25 },
-  { source: 'Rio do Sul', target: 'Presidente Getúlio', distance: 40 },
-  { source: 'Rio do Sul', target: 'Agrolândia', distance: 20 },
-  { source: 'Ituporanga', target: 'Laurentino', distance: 60 },
-  { source: 'Ituporanga', target: 'Pouso Redondo', distance: 70 },
-  { source: 'Ituporanga', target: 'Salete', distance: 50 },
-  { source: 'Ituporanga', target: 'Trombudo Central', distance: 18 },
-  { source: 'Ibirama', target: 'Witmarsum', distance: 30 },
-  { source: 'Ibirama', target: 'Dona Emma', distance: 45 },
-  { source: 'Ibirama', target: 'Taió', distance: 75 },
-  { source: 'Taió', target: 'José Boiteux', distance: 25 },
-  { source: 'Taió', target: 'Aurora', distance: 35 },
-  { source: 'Taió', target: 'Trombudo Central', distance: 35 },
-  { source: 'Trombudo Central', target: 'Braço do Trombudo', distance: 40 },
-  { source: 'Presidente Getúlio', target: 'Laurentino', distance: 50 },
-  { source: 'Agrolândia', target: 'Pouso Redondo', distance: 55 },
-  { source: 'Salete', target: 'Pouso Redondo', distance: 40 },
-  { source: 'Laurentino', target: 'Salete', distance: 20 }
+  { source: 'Rio do Sul', target: 'Ituporanga', distance: 35, pavimentacao: 1, trafego: 2 },
+  { source: 'Rio do Sul', target: 'Ibirama', distance: 45, pavimentacao: 1.5, trafego: 3 },
+  { source: 'Rio do Sul', target: 'Taió', distance: 55, pavimentacao: 2.2, trafego: 1 },
+  { source: 'Rio do Sul', target: 'Trombudo Central', distance: 25, pavimentacao: 1, trafego: 3 },
+  { source: 'Rio do Sul', target: 'Presidente Getúlio', distance: 40, pavimentacao: 1.5, trafego: 2 },
+  { source: 'Rio do Sul', target: 'Agrolândia', distance: 20, pavimentacao: 1, trafego: 1 },
+  { source: 'Ituporanga', target: 'Laurentino', distance: 60, pavimentacao: 1.5, trafego: 3 },
+  { source: 'Ituporanga', target: 'Pouso Redondo', distance: 70, pavimentacao: 2.2, trafego: 2 },
+  { source: 'Ituporanga', target: 'Salete', distance: 50, pavimentacao: 1, trafego: 1 },
+  { source: 'Ituporanga', target: 'Trombudo Central', distance: 18, pavimentacao: 1, trafego: 1 },
+  { source: 'Ibirama', target: 'Witmarsum', distance: 30, pavimentacao: 2.2, trafego: 2 },
+  { source: 'Ibirama', target: 'Dona Emma', distance: 45, pavimentacao: 1, trafego: 3 },
+  { source: 'Ibirama', target: 'Taió', distance: 75, pavimentacao: 1, trafego: 3 },
+  { source: 'Taió', target: 'José Boiteux', distance: 25, pavimentacao: 1.5, trafego: 1 },
+  { source: 'Taió', target: 'Aurora', distance: 35, pavimentacao: 2.2, trafego: 2 },
+  { source: 'Taió', target: 'Trombudo Central', distance: 35, pavimentacao: 1.5, trafego: 1 },
+  { source: 'Trombudo Central', target: 'Braço do Trombudo', distance: 40, pavimentacao: 1, trafego: 2 },
+  { source: 'Presidente Getúlio', target: 'Laurentino', distance: 50, pavimentacao: 1.5, trafego: 3 },
+  { source: 'Agrolândia', target: 'Pouso Redondo', distance: 55, pavimentacao: 2.2, trafego: 2 },
+  { source: 'Salete', target: 'Pouso Redondo', distance: 40, pavimentacao: 2.2, trafego: 1 },
+  { source: 'Laurentino', target: 'Salete', distance: 20, pavimentacao: 1, trafego: 1 }
 ];
 
 // Desenhar os links (arestas)
