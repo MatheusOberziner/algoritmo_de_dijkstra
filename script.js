@@ -19,22 +19,23 @@ const graph = {
 
 // Implementação do Algoritmo de Dijkstra
 function dijkstra(graph, start, end) {
-  let distances = {};
-  let prev = {};
-  let pq = [];
+  let distances = {};  // Armazena a menor distância conhecida até cada vértice
+  let prev = {};       // Mantém o caminho percorrido até o vértice atual
+  let pq = [];         // Fila de prioridade para explorar os vértices
 
+  // Inicializa todas as distâncias como infinito e caminho anterior como nulo
   Object.keys(graph).forEach(v => {
     distances[v] = Infinity;
     prev[v] = null;
   });
 
-  distances[start] = 0;
-  pq.push({ node: start, dist: 0 });
+  distances[start] = 0;  // A distância do vértice inicial é 0
+  pq.push({ node: start, dist: 0 });  // Começa a exploração pelo vértice inicial
 
   while (pq.length > 0) {
-    let { node, dist } = pq.shift();
+    let { node, dist } = pq.shift();  // Seleciona o vértice com a menor distância
 
-    if (node === end) {
+    if (node === end) {  // Se o destino final for alcançado, reconstrói o caminho
       let path = [];
       let u = end;
       while (prev[u]) {
@@ -42,24 +43,25 @@ function dijkstra(graph, start, end) {
         u = prev[u];
       }
       path.push(start);
-      return { path: path.reverse(), distance: distances[end] };
+      return { path: path.reverse(), distance: distances[end] };  // Retorna o caminho e a distância total
     }
 
+    // Explora os vizinhos do vértice atual
     Object.entries(graph[node]).forEach(([neighbor, cost]) => {
-      let alt = dist + cost;
-      if (alt < distances[neighbor]) {
+      let alt = dist + cost;  // Calcula a nova possível distância
+      if (alt < distances[neighbor]) {  // Se for menor, atualiza a menor distância
         distances[neighbor] = alt;
         prev[neighbor] = node;
-        pq.push({ node: neighbor, dist: alt });
+        pq.push({ node: neighbor, dist: alt });  // Adiciona o vizinho à fila de exploração
       }
     });
 
-    pq.sort((a, b) => a.dist - b.dist);
+    pq.sort((a, b) => a.dist - b.dist);  // Ordena a fila pela menor distância
   }
 
-  return { path: [], distance: Infinity };
-  // return 'Nenhum caminho encontrado';
+  return { path: [], distance: Infinity };  // Retorna vazio se não houver caminho encontrado
 }
+
 
 // Adicionar evento ao botão de encontrar caminho
 document.getElementById('findPath').addEventListener('click', () => {
