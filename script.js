@@ -153,6 +153,9 @@ function stepByStepDijkstra() {
       document.getElementById('result').textContent = 'Caminho completo!';
       document.getElementById('result').textContent = stringCaminho;
     }
+
+    // Destacar caminhos mais longos
+    highlightLongPaths(stepPath);
   }
 }
 
@@ -168,7 +171,19 @@ function highlightEdge(node1, node2) {
   svg.selectAll('line')
     .filter(d => (d.source === node1 && d.target === node2) || (d.source === node2 && d.target === node1))
     .attr('stroke', 'blue')
-    .attr('stroke-width', 3);
+    .attr('stroke-width', 3)
+    .transition()
+    .duration(500)
+}
+
+// Função para destacar os caminhos mais longos
+function highlightLongPaths(path) {
+  svg.selectAll('line').each(function(d) {
+    if (!path.includes(d.source) || !path.includes(d.target)) {
+      // Destacar arestas que não estão no caminho mais curto
+      d3.select(this).attr('stroke', 'red').attr('stroke-width', 3);
+    }
+  });
 }
 
 // Evento do botão para executar passo a passo
